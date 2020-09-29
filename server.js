@@ -8,8 +8,11 @@ var cors = require('cors');
 
 var app = express();
 
-// Basic Configuration 
-var port = process.env.PORT || 3000;
+if(process.env.NODE_ENV === 'development') {
+  //Set environment variables for Dev
+  const dotenv = require('dotenv').config()
+  console.log('Development is running')
+}
 
 /** this project needs a db !! **/ 
 // mongoose.connect(process.env.DB_URI);
@@ -32,6 +35,6 @@ app.get("/api/hello", function (req, res) {
 });
 
 
-app.listen(port, function () {
-  console.log('Node.js listening ...');
+app.listen(process.env.port, function () {
+  console.log(`Node.js listening on port ${process.env.port}`);
 });
