@@ -3,6 +3,7 @@
 var express = require('express');
 var mongo = require('mongodb');
 var mongoose = require('mongoose');
+const bodyParser = require('body-parser')
 
 var cors = require('cors');
 
@@ -19,9 +20,10 @@ if(process.env.NODE_ENV === 'development') {
 
 app.use(cors());
 
-/** this project needs to parse POST bodies **/
-// you should mount the body-parser here
+//Body Parser middleware
+app.use(bodyParser.urlencoded({extended: false}))
 
+//Static routes
 app.use('/public', express.static(process.cwd() + '/public'));
 
 app.get('/', function(req, res){
@@ -29,10 +31,11 @@ app.get('/', function(req, res){
 });
 
   
-// your first API endpoint... 
-app.get("/api/hello", function (req, res) {
-  res.json({greeting: 'hello API'});
-});
+app.post("/api/shorturl/new", (req, res) => {
+  //key/value pair = url: www.google.com
+  console.log(req.body)
+  res.json({status: 'successful'})
+})
 
 
 app.listen(process.env.port, function () {
