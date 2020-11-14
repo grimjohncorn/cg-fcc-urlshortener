@@ -4,6 +4,8 @@ var express = require('express');
 var mongo = require('mongodb');
 var mongoose = require('mongoose');
 const bodyParser = require('body-parser')
+const dns = require('dns')
+const dnsPromises = dns.promises
 
 var cors = require('cors');
 
@@ -33,7 +35,23 @@ app.get('/', function(req, res){
   
 app.post("/api/shorturl/new", (req, res) => {
   //key/value pair = url: www.google.com
-  console.log(req.body)
+  const url = req.body.url
+  
+  
+  const checkURL = async (url) => {
+    try {
+      const urlDNS = url.match(/(\w+\.)+\w+/g)[0]
+      const result = await dnsPromises.lookup(urlDNS)
+      return true
+    } catch(err) {
+      //URL not found
+      return false
+    }
+  }
+
+  checkURL(url).then(result => console.log(result))
+
+
   res.json({status: 'successful'})
 })
 
